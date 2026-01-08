@@ -135,4 +135,10 @@ class Place extends Model
               ->orWhere('short_desc_en', 'like', "%{$keyword}%");
         });
     }
+
+    public function getUploadedFileExtension(string $inputKey): string
+    {
+        $file = request()->file($inputKey);
+        return $file ? strtolower($file->getClientOriginalExtension()) : 'jpg';
+    }
 }
