@@ -71,7 +71,7 @@ class PlaceController extends Controller
 
     public function edit(Place $place): View
     {
-        $place->load(['thumbnailPhoto', 'tags']);
+        $place->load(['thumbnailPhoto', 'tags', 'galleryPhotos']);
         [$categories, $prefectures, $tags] = $this->masterData();
 
         $selectedTagIds = $place->tags->pluck('id')->all();

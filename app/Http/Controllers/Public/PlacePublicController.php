@@ -48,7 +48,7 @@ class PlacePublicController extends Controller
     {
         abort_unless($place->is_published, 404);
 
-        $place->load(['category', 'prefecture', 'photos', 'thumbnailPhoto', 'tags']);
+        $place->load(['category', 'prefecture', 'galleryPhotos', 'thumbnailPhoto', 'tags']);
 
         return view('public.show', compact('place'));
     }
