@@ -25,6 +25,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('places', PlaceController::class);
 });
 
+require __DIR__.'/auth.php';
+
 //公開ページ
 
 Route::get('/', [PlacePublicController::class, 'home'])->name('public.home');
@@ -39,4 +41,4 @@ Route::get('/tags/{tag:slug}', [PlacePublicController::class, 'tag'])
 Route::get('/places/{place:slug}', [PlacePublicController::class, 'show'])
     ->name('public.places.show');
 
-require __DIR__.'/auth.php';
+Route::view('/about', 'public.about')->name('public.about');
