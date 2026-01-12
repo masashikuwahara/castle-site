@@ -1,4 +1,19 @@
-<x-public-layout :title="$place->name_ja">
+@php
+    $ogImage = $place->thumbnailPhoto ? Storage::url($place->thumbnailPhoto->path) : asset('images/ogp-default.png');
+    // Storage::url は /storage/... なので、og:image には絶対URLが理想（SNSが読めないことがある）
+    // より確実にするなら url() で絶対URL化
+    $ogImage = url($ogImage);
+
+    $desc = $place->short_desc_ja
+        ?: ($place->description_ja ? mb_strimwidth(strip_tags($place->description_ja), 0, 120, '…') : '詳細ページ');
+@endphp
+
+<x-public-layout
+    :title="$place->name_ja . '｜城・文化財'"
+    :description="$desc"
+    :ogImage="$ogImage"
+    :ogUrl="route('public.places.show', $place)">
+
     <div class="space-y-6">
         <div class="space-y-2">
             <div class="text-sm text-gray-500">
@@ -83,11 +98,11 @@
         </div>
 
         {{-- 写真ギャラリー（登録している場合） --}}
-        @if($place->photos->count() > 0)
+        @if($place->galleryPhotos->count() > 0)
             <div class="space-y-3">
                 <h2 class="text-lg font-bold">写真</h2>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    @foreach($place->photos as $photo)
+                    @foreach($place->galleryPhotos as $photo)
                         <div class="bg-white rounded shadow overflow-hidden">
                             <img src="{{ Storage::url($photo->path) }}" class="w-full aspect-square object-cover" alt="">
                             @if($photo->caption_ja)

@@ -1,4 +1,7 @@
-<x-public-layout :title="'検索'">
+<x-public-layout
+    title="検索｜城・文化財"
+    :description="$q ? '「'.$q.'」の検索結果ページ。' : 'キーワード検索ページ。'">
+
     <div class="space-y-4">
         <div class="flex items-end justify-between">
             <h1 class="text-xl font-bold">検索</h1>
