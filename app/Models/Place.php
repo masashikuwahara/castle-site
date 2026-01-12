@@ -88,6 +88,13 @@ class Place extends Model
         return $this->belongsToMany(Tag::class, 'place_tag');
     }
 
+    public function galleryPhotos(): HasMany
+    {
+        return $this->hasMany(PlacePhoto::class)
+            ->where('is_thumbnail', false)
+            ->orderBy('sort_order');
+    }
+
     // --------------------
     // Scopes (管理/公開で便利)
     // --------------------
