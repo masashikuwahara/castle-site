@@ -72,4 +72,106 @@ class PlacePhotoController extends Controller
             ->route('admin.places.edit', $placeId)
             ->with('status', '写真を削除しました');
     }
+
+    public function moveUp(PlacePhoto $photo): \Illuminate\Http\RedirectResponse
+    {
+        if ($photo->is_thumbnail) {
+            return back();
+        }
+
+        DB::transaction(function () use ($photo) {
+            // 同じplaceのギャラリー写真で、ひとつ上（sort_orderが小さい最大）を探す
+            $prev = PlacePhoto::query()
+                ->where('place_id', $photo->place_id)
+                ->where('is_thumbnail', false)
+                ->where('sort_order', '<', $photo->sort_order)
+                ->orderByDesc('sort_order')
+                ->first();
+
+            if (!$prev) {
+                return;
+            }
+
+            $currentOrder = $photo->sort_order;
+            $photo->update(['sort_order' => $prev->sort_order]);
+            $prev->update(['sort_order' => $currentOrder]);
+        });
+
+        return redirect()
+            ->route('admin.places.edit', $photo->place_id)
+            ->with('status', '並び順を変更しました');
+    }
+
+    public function moveDown(PlacePhoto $photo): \Illuminate\Http\RedirectResponse
+    {
+        if ($photo->is_thumbnail) {
+            return back();
+        }
+
+        DB::transaction(function () use ($photo) {
+            // 同じplaceのギャラリー写真で、ひとつ下（sort_orderが大きい最小）を探す
+            $next = PlacePhoto::query()
+                ->where('place_id', $photo->place_id)
+                ->where('is_thumbnail', false)
+                ->where('sort_order', '>', $photo->sort_order)
+                ->orderBy('sort_order')
+                ->first();
+
+            if (!$next) {
+                return;
+            }
+
+            $currentOrder = $photo->sort_order;
+            $photo->update(['sort_order' => $next->sort_order]);
+            $next->update(['sort_order' => $currentOrder]);
+        });
+
+        return redirect()
+            ->route('admin.places.edit', $photo->place_id)
+            ->with('status', '並び順を変更しました');
+    }
+
+    public function update(\Illuminate\Http\Request $request, PlacePhoto $photo): \Illuminate\Http\RedirectResponse
+    {
+        if ($photo->is_thumbnail) {
+            return back()->with('status', 'サムネはここでは編集しません');
+        }
+
+        $validated = $request->validate([
+            'caption_ja' => ['nullable', 'string', 'max:200'],
+            'caption_en' => ['nullable', 'string', 'max:240'],
+            'taken_at' => ['nullable', 'date'],
+        ]);
+
+        $photo->update($validated);
+
+        return redirect()
+            ->route('admin.places.edit', $photo->place_id)
+            ->with('status', 'キャプションを更新しました');
+    }
+
+    public function makeThumbnail(PlacePhoto $photo): \Illuminate\Http\RedirectResponse
+    {
+        // すでにサムネなら何もしない
+        if ($photo->is_thumbnail) {
+            return redirect()
+                ->route('admin.places.edit', $photo->place_id)
+                ->with('status', 'すでにサムネです');
+        }
+
+        \Illuminate\Support\Facades\DB::transaction(function () use ($photo) {
+            // 1) 同じplaceの既存サムネを解除
+            PlacePhoto::query()
+                ->where('place_id', $photo->place_id)
+                ->where('is_thumbnail', true)
+                ->update(['is_thumbnail' => false]);
+
+            // 2) 対象をサムネにする（sort_orderはそのまま）
+            $photo->update(['is_thumbnail' => true]);
+        });
+
+        return redirect()
+            ->route('admin.places.edit', $photo->place_id)
+            ->with('status', 'サムネを更新しました');
+    }
 }
