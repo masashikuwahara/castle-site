@@ -103,15 +103,61 @@
                 <h2 class="text-lg font-bold">写真</h2>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                     @foreach($place->galleryPhotos as $photo)
-                        <div class="bg-white rounded shadow overflow-hidden">
-                            <img src="{{ Storage::url($photo->path) }}" class="w-full aspect-square object-cover" alt="">
-                            @if($photo->caption_ja)
-                                <div class="p-2 text-xs text-gray-600">{{ $photo->caption_ja }}</div>
-                            @endif
-                        </div>
+                    @php
+                        $cap = $photo->caption_ja ?: $photo->caption_en;
+                    @endphp
+
+                    <button
+                        type="button"
+                        class="bg-white rounded shadow overflow-hidden text-left hover:shadow-md transition"
+                        data-gallery="place-gallery"
+                        data-src="{{ url(Storage::url($photo->path)) }}"
+                        data-caption="{{ e($cap ?? '') }}"
+                    >
+                        <img src="{{ Storage::url($photo->path) }}" class="w-full aspect-square object-cover" alt="">
+                        @if($cap)
+                            <div class="p-2 text-xs text-gray-600">{{ $cap }}</div>
+                        @endif
+                    </button>
                     @endforeach
                 </div>
             </div>
         @endif
+    </div>
+    {{-- Gallery Modal --}}
+    <div id="galleryModal" class="fixed inset-0 z-50 hidden" data-close="1">
+        {{-- overlay --}}
+        <div id="galleryOverlay" class="absolute inset-0 bg-black/70" data-close="1"></div>
+
+        {{-- modal content --}}
+        <div class="relative w-full h-full flex items-center justify-center p-4" data-close="1">
+            <div class="relative max-w-5xl w-full" data-close="0">
+                {{-- close --}}
+                <button id="galleryClose"
+                        class="absolute -top-10 right-0 text-white text-sm px-3 py-2 rounded bg-black/40 hover:bg-black/60">
+                    閉じる（Esc）
+                </button>
+
+                {{-- image --}}
+                <div class="relative bg-black rounded overflow-hidden">
+                    <img id="galleryImage" src="" alt="" class="w-full max-h-[80vh] object-contain bg-black">
+
+                    {{-- arrows --}}
+                    <button id="galleryPrev"
+                            class="absolute left-2 top-1/2 -translate-y-1/2 text-white bg-black/40 hover:bg-black/60 rounded-full w-10 h-10 flex items-center justify-center"
+                            aria-label="前の写真">
+                        ←
+                    </button>
+                    <button id="galleryNext"
+                            class="absolute right-2 top-1/2 -translate-y-1/2 text-white bg-black/40 hover:bg-black/60 rounded-full w-10 h-10 flex items-center justify-center"
+                            aria-label="次の写真">
+                        →
+                    </button>
+                </div>
+
+                {{-- caption --}}
+                <div id="galleryCaption" class="mt-3 text-white text-sm bg-black/40 rounded p-3"></div>
+            </div>
+        </div>
     </div>
 </x-public-layout>
