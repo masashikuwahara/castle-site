@@ -33,6 +33,20 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // ギャラリー写真
     Route::post('places/{place}/photos', [PlacePhotoController::class, 'store'])->name('places.photos.store');
     Route::delete('place-photos/{photo}', [PlacePhotoController::class, 'destroy'])->name('place_photos.destroy');
+    
+    //ギャラリー写真の並び替え
+    Route::post('place-photos/{photo}/move-up', [\App\Http\Controllers\Admin\PlacePhotoController::class, 'moveUp'])
+    ->name('place_photos.move_up');
+    Route::post('place-photos/{photo}/move-down', [\App\Http\Controllers\Admin\PlacePhotoController::class, 'moveDown'])
+    ->name('place_photos.move_down');
+
+    //キャプション
+    Route::put('place-photos/{photo}', [\App\Http\Controllers\Admin\PlacePhotoController::class, 'update'])
+    ->name('place_photos.update');
+
+    //サムネにする
+    Route::post('place-photos/{photo}/make-thumbnail', [\App\Http\Controllers\Admin\PlacePhotoController::class, 'makeThumbnail'])
+    ->name('place_photos.make_thumbnail');
 });
 
 require __DIR__.'/auth.php';
