@@ -60,6 +60,15 @@
                 <div class="md:col-span-2"><span class="text-gray-500">遺構：</span>{!! nl2br(e($place->remains_ja)) !!}</div>
                 <div><span class="text-gray-500">おすすめ度：</span>{{ $place->rating ? str_repeat('★', (int)$place->rating) : '' }}</div>
                 <div><span class="text-gray-500">住所：</span>{{ $place->address_ja }}</div>
+                @if($place->opening_hours_ja)
+                    <div class="md:col-span-2"><span class="text-gray-500">開城時間：</span>{!! nl2br(e($place->opening_hours_ja)) !!}</div>
+                @endif
+                @if($place->closed_days_ja)
+                    <div class="md:col-span-2"><span class="text-gray-500">休城日：</span>{{ $place->closed_days_ja }}</div>
+                @endif
+                @if($place->admission_fee_ja)
+                    <div class="md:col-span-2"><span class="text-gray-500">入城料金：</span>{{ $place->admission_fee_ja }}</div>
+                @endif
             </div>
         </div>
 

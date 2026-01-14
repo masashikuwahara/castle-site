@@ -47,6 +47,15 @@ class PlaceController extends Controller
                 'thumbnail_caption_en',
                 'thumbnail_taken_at',
             ]));
+            
+            $validated = $request->validate([
+                'opening_hours_ja' => ['nullable', 'string'],
+                'opening_hours_en' => ['nullable', 'string'],
+                'closed_days_ja' => ['nullable', 'string', 'max:255'],
+                'closed_days_en' => ['nullable', 'string', 'max:255'],
+                'admission_fee_ja' => ['nullable', 'string', 'max:255'],
+                'admission_fee_en' => ['nullable', 'string', 'max:255'],
+            ]);
 
             // tags
             $tagIds = $request->input('tag_ids', []);
@@ -90,6 +99,15 @@ class PlaceController extends Controller
                 'thumbnail_taken_at',
                 'remove_thumbnail',
             ]));
+
+            $validated = $request->validate([
+                'opening_hours_ja' => ['nullable', 'string'],
+                'opening_hours_en' => ['nullable', 'string'],
+                'closed_days_ja' => ['nullable', 'string', 'max:255'],
+                'closed_days_en' => ['nullable', 'string', 'max:255'],
+                'admission_fee_ja' => ['nullable', 'string', 'max:255'],
+                'admission_fee_en' => ['nullable', 'string', 'max:255'],
+            ]);
 
             // tags
             $tagIds = $request->input('tag_ids', []);

@@ -71,6 +71,40 @@
         @error('name_en') <div class="text-red-600 text-sm">{{ $message }}</div> @enderror
     </div>
 
+        <div class="md:col-span-2">
+        <label class="block text-sm font-medium text-gray-700">開城時間（日本語）</label>
+        <textarea name="opening_hours_ja" class="mt-1 w-full rounded border-gray-300" rows="2">{{ old('opening_hours_ja', $place->opening_hours_ja) }}</textarea>
+    </div>
+
+    <div class="md:col-span-2">
+        <label class="block text-sm font-medium text-gray-700">Opening hours (EN)</label>
+        <textarea name="opening_hours_en" class="mt-1 w-full rounded border-gray-300" rows="2">{{ old('opening_hours_en', $place->opening_hours_en) }}</textarea>
+    </div>
+
+    <div>
+        <label class="block text-sm font-medium text-gray-700">休城日（日本語）</label>
+        <input name="closed_days_ja" class="mt-1 w-full rounded border-gray-300"
+               value="{{ old('closed_days_ja', $place->closed_days_ja) }}">
+    </div>
+
+    <div>
+        <label class="block text-sm font-medium text-gray-700">Closed days (EN)</label>
+        <input name="closed_days_en" class="mt-1 w-full rounded border-gray-300"
+               value="{{ old('closed_days_en', $place->closed_days_en) }}">
+    </div>
+
+    <div>
+        <label class="block text-sm font-medium text-gray-700">入城料金（日本語）</label>
+        <input name="admission_fee_ja" class="mt-1 w-full rounded border-gray-300"
+               value="{{ old('admission_fee_ja', $place->admission_fee_ja) }}">
+    </div>
+
+    <div>
+        <label class="block text-sm font-medium text-gray-700">Admission fee (EN)</label>
+        <input name="admission_fee_en" class="mt-1 w-full rounded border-gray-300"
+               value="{{ old('admission_fee_en', $place->admission_fee_en) }}">
+    </div>
+
     <div class="md:col-span-2">
         <label class="block text-sm mb-1">短い説明（一覧・OG用）</label>
         <input name="short_desc_ja" value="{{ old('short_desc_ja', $place->short_desc_ja ?? '') }}" class="w-full rounded border-gray-300" placeholder="姫路城は白鷺城とも呼ばれる…">
