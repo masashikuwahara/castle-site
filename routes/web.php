@@ -52,7 +52,6 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 require __DIR__.'/auth.php';
 
 //公開ページ
-
 Route::get('/', [PlacePublicController::class, 'home'])->name('public.home');
 Route::get('/search', [PlacePublicController::class, 'search'])->name('public.search');
 
@@ -67,7 +66,8 @@ Route::get('/places/{place:slug}', [PlacePublicController::class, 'show'])
 
 Route::view('/about', 'public.about')->name('public.about');
 
+Route::get('/near', [\App\Http\Controllers\Public\PlacePublicController::class, 'near'])
+    ->name('public.near');
+
 //サイトマップ作製
-
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('public.sitemap');
-

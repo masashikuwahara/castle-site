@@ -32,6 +32,7 @@
 
         <nav class="hidden md:flex items-center gap-4 text-sm text-gray-600">
             <a href="{{ route('public.about') }}" class="hover:underline">初めて訪れる人へ</a>
+            <a href="{{ route('public.near') }}" class="hover:underline">近くのスポット</a>
         </nav>
 
         <form action="{{ route('public.search') }}" method="GET" class="flex gap-2 w-full max-w-md">
