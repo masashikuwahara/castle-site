@@ -65,24 +65,6 @@
                 <div class="text-sm text-gray-600">半径：{{ (int)$radiusKm }}km（概算）</div>
             </div>
 
-            @php
-                // place側のlat/lngがあればそれ、無ければ住所
-                $mapQuery = (!is_null($place->lat) && !is_null($place->lng))
-                    ? ($place->lat . ',' . $place->lng)
-                    : ($place->address_ja ?? $place->name_ja);
-
-                    $mapUrl = $origin
-                    ? ('https://www.google.com/maps/dir/?api=1&origin=' . urlencode($origin) . '&destination=' . urlencode($destination))
-                    : ('https://www.google.com/maps/search/?api=1&query=' . urlencode($destination));
-            @endphp
-
-            <a href="{{ $mapUrl }}"
-            target="_blank" rel="noopener"
-            class="inline-block text-xs text-blue-600 hover:underline">
-                地図で開く
-            </a>
-
-
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 @foreach($places as $place)
                     <a href="{{ route('public.places.show', $place) }}"
@@ -101,7 +83,20 @@
                             <div class="text-xs text-gray-500">
                                 {{ $place->prefecture?->name_ja }} / {{ $place->category?->name_ja }}
                             </div>
+                            @php
+                                // place側のlat/lngがあればそれ、無ければ住所
+                                $mapQuery = (!is_null($place->lat) && !is_null($place->lng))
+                                    ? ($place->lat . ',' . $place->lng)
+                                    : ($place->address_ja ?? $place->name_ja);
 
+                                $mapUrl = 'https://www.google.com/maps/search/?api=1&query=' . urlencode($mapQuery);
+                            @endphp
+
+                            <a href="{{ $mapUrl }}"
+                            target="_blank" rel="noopener"
+                            class="inline-block text-xs text-blue-600 hover:underline">
+                                地図で開く
+                            </a>
                             @if(isset($place->distance_km))
                                 <div class="text-xs text-gray-700">
                                     距離：{{ number_format((float)$place->distance_km, 1) }} km

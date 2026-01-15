@@ -10,6 +10,9 @@
                 <a href="{{ route('public.about') }}" class="p-4 border rounded hover:bg-gray-50">
                     初めて訪れる人へ
                 </a>
+                <a href="{{ route('public.near') }}" class="p-4 border rounded hover:bg-gray-50">
+                    近くのスポット
+                </a>
                 @foreach($categories as $category)
                     <a href="{{ route('public.categories.show', $category) }}" class="p-4 border rounded hover:bg-gray-50">
                         {{ $category->name_ja }}
@@ -17,7 +20,6 @@
                 @endforeach
             </div>
         </section>
-
         <section>
             <div class="flex items-end justify-between mb-3">
                 <h2 class="text-lg font-bold">最近追加した公開コンテンツ</h2>

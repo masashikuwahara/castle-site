@@ -30,11 +30,6 @@
     <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
         <a href="{{ route('public.home') }}" class="font-bold text-lg">城・文化財</a>
 
-        <nav class="hidden md:flex items-center gap-4 text-sm text-gray-600">
-            <a href="{{ route('public.about') }}" class="hover:underline">初めて訪れる人へ</a>
-            <a href="{{ route('public.near') }}" class="hover:underline">近くのスポット</a>
-        </nav>
-
         <form action="{{ route('public.search') }}" method="GET" class="flex gap-2 w-full max-w-md">
             <input name="q" value="{{ request('q') }}"
                    class="w-full rounded border-gray-300"
