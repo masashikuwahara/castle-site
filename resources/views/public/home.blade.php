@@ -10,9 +10,9 @@
                 <a href="{{ route('public.about') }}" class="p-4 border rounded hover:bg-gray-50">
                     初めて訪れる人へ
                 </a>
-                <a href="{{ route('public.near') }}" class="p-4 border rounded hover:bg-gray-50">
+                {{-- <a href="{{ route('public.near') }}" class="p-4 border rounded hover:bg-gray-50">
                     近くのスポット
-                </a>
+                </a> --}}
                 @foreach($categories as $category)
                     <a href="{{ route('public.categories.show', $category) }}" class="p-4 border rounded hover:bg-gray-50">
                         {{ $category->name_ja }}
