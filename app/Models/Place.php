@@ -46,6 +46,9 @@ class Place extends Model
         'rating',
         'is_published',
         'published_at',
+        'opening_hours_ja','opening_hours_en',
+        'closed_days_ja','closed_days_en',
+        'admission_fee_ja','admission_fee_en',
     ];
 
     protected $casts = [
