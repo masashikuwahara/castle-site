@@ -16,7 +16,7 @@ class PlacePhotoController extends Controller
     {
         $validated = $request->validate([
             'photos' => ['required', 'array', 'min:1'],
-            'photos.*' => ['file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'], // 5MB
+            'photos.*' => ['file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:20480'], // 5MB
         ]);
 
         DB::transaction(function () use ($place, $request) {
