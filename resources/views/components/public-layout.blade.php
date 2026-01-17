@@ -28,13 +28,14 @@
 <body class="bg-gray-50 text-gray-900">
 <header class="border-b bg-white">
     <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
-        <a href="{{ route('public.home') }}" class="font-bold text-lg">Daytripper(仮)</a>
-
+        <a href="{{ route('public.home') }}" class="font-bold text-lg">Daytripper</a>
         <form action="{{ route('public.search') }}" method="GET" class="flex gap-2 w-full max-w-md">
             <input name="q" value="{{ request('q') }}"
-                   class="w-full rounded border-gray-300"
-                   placeholder="城名などを入力">
-            <button class="px-4 py-2 bg-gray-900 text-white rounded">検索</button>
+                class="w-full rounded border-gray-300"
+                placeholder="城名などを入力">
+            <button class="px-4 py-2 bg-gray-900 text-white rounded whitespace-nowrap shrink-0">
+                検索
+            </button>
         </form>
     </div>
 </header>
@@ -45,7 +46,7 @@
 
 <footer class="border-t bg-white">
     <div class="max-w-6xl mx-auto px-4 py-6 text-sm text-gray-500">
-        © {{ date('Y') }} Daytripper(仮)
+        © {{ date('Y') }} Daytripper
     </div>
 </footer>
 </body>
