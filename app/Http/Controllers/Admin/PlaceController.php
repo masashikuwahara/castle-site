@@ -40,15 +40,17 @@ class PlaceController extends Controller
     public function store(PlaceStoreRequest $request): RedirectResponse
     {
         DB::transaction(function () use ($request) {
-            $place = Place::create($request->safe()->except([
+
+            $data = $request->safe()->except([
                 'tag_ids',
                 'thumbnail',
                 'thumbnail_caption_ja',
                 'thumbnail_caption_en',
                 'thumbnail_taken_at',
-            ]));
-            
-            $validated = $request->validate([
+            ]);
+
+            // ★追加：この6項目を取得して $data にマージ
+            $extra = $request->validate([
                 'opening_hours_ja' => ['nullable', 'string'],
                 'opening_hours_en' => ['nullable', 'string'],
                 'closed_days_ja' => ['nullable', 'string', 'max:255'],
@@ -57,11 +59,18 @@ class PlaceController extends Controller
                 'admission_fee_en' => ['nullable', 'string', 'max:255'],
             ]);
 
-            // tags
-            $tagIds = $request->input('tag_ids', []);
-            $place->tags()->sync($tagIds);
+            $data = array_merge($data, $extra);
 
-            // thumbnail photo (optional)
+            // ★checkbox対策：未チェックだと送信されないので boolean化して確実に反映
+            $data['is_published'] = $request->boolean('is_published');
+            $data['published_at'] = $data['is_published'] ? ($data['published_at'] ?? now()) : null;
+
+            $place = Place::create($data);
+
+            // tags
+            $place->tags()->sync($request->input('tag_ids', []));
+
+            // thumbnail
             if ($request->hasFile('thumbnail')) {
                 $this->upsertThumbnailPhoto(
                     place: $place,
@@ -73,9 +82,7 @@ class PlaceController extends Controller
             }
         });
 
-        return redirect()
-            ->route('admin.places.index')
-            ->with('status', '登録しました');
+        return redirect()->route('admin.places.index')->with('status', '登録しました');
     }
 
     public function edit(Place $place): View
@@ -91,16 +98,17 @@ class PlaceController extends Controller
     public function update(PlaceUpdateRequest $request, Place $place): RedirectResponse
     {
         DB::transaction(function () use ($request, $place) {
-            $place->update($request->safe()->except([
+
+            $data = $request->safe()->except([
                 'tag_ids',
                 'thumbnail',
                 'thumbnail_caption_ja',
                 'thumbnail_caption_en',
                 'thumbnail_taken_at',
                 'remove_thumbnail',
-            ]));
+            ]);
 
-            $validated = $request->validate([
+            $extra = $request->validate([
                 'opening_hours_ja' => ['nullable', 'string'],
                 'opening_hours_en' => ['nullable', 'string'],
                 'closed_days_ja' => ['nullable', 'string', 'max:255'],
@@ -109,16 +117,22 @@ class PlaceController extends Controller
                 'admission_fee_en' => ['nullable', 'string', 'max:255'],
             ]);
 
+            $data = array_merge($data, $extra);
+
+            $data['is_published'] = $request->boolean('is_published');
+            $data['published_at'] = $data['is_published'] ? ($place->published_at ?? now()) : null;
+
+            $place->update($data);
+
             // tags
-            $tagIds = $request->input('tag_ids', []);
-            $place->tags()->sync($tagIds);
+            $place->tags()->sync($request->input('tag_ids', []));
 
             // remove thumbnail
             if ($request->boolean('remove_thumbnail')) {
                 $this->deleteThumbnailPhoto($place);
             }
 
-            // update/upload thumbnail
+            // thumbnail upload
             if ($request->hasFile('thumbnail')) {
                 $this->upsertThumbnailPhoto(
                     place: $place,
@@ -130,9 +144,7 @@ class PlaceController extends Controller
             }
         });
 
-        return redirect()
-            ->route('admin.places.edit', $place)
-            ->with('status', '更新しました');
+        return redirect()->route('admin.places.edit', $place)->with('status', '更新しました');
     }
 
     // 今回は削除なし運用なので destroy は使わない（Routeは残ってもOK）
