@@ -29,4 +29,48 @@
         </section>
 
     </div>
+    @php
+        $logs = $changelogs ?? collect();
+        $newBorder = now()->subDays(7);
+    @endphp
+
+    @if($logs->isNotEmpty())
+        <section class="mt-10 border-t pt-6">
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="text-lg font-semibold">更新履歴</h2>
+            </div>
+
+            <ul class="space-y-2 text-sm">
+                @foreach($logs->take(10) as $log)
+                    @php
+                        $date = \Illuminate\Support\Carbon::parse($log['date']);
+                        $isNew = $date->greaterThanOrEqualTo($newBorder);
+                    @endphp
+
+                    <li class="flex items-start gap-3">
+                        <span class="text-gray-500 tabular-nums w-24 shrink-0">
+                            {{ $date->format('Y-m-d') }}
+                        </span>
+
+                        <div class="flex-1">
+                            @if(!empty($log['url']))
+                                <a href="{{ $log['url'] }}" class="hover:underline">
+                                    {{ $log['title_ja'] ?? '' }}
+                                </a>
+                            @else
+                                <span>{{ $log['title_ja'] ?? '' }}</span>
+                            @endif
+
+                            @if($isNew)
+                                <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded bg-red-600 text-white text-xs whitespace-nowrap">
+                                    NEW
+                                </span>
+                            @endif
+                        </div>
+                    </li>
+                @endforeach
+            </ul>
+        </section>
+    @endif
+
 </x-public-layout>
