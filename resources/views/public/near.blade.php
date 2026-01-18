@@ -22,7 +22,7 @@
         {{-- 位置情報取得 --}}
         <div class="bg-white rounded shadow p-4 space-y-2">
             <div class="text-sm text-gray-700">
-                位置情報を許可すると、近い順に表示します（HTTPS/localhostのみ対応）。
+                位置情報を許可すると、近い順に表示します。
             </div>
 
             <div class="flex flex-wrap gap-2 items-center">
@@ -37,7 +37,7 @@
                 <input type="hidden" name="r" value="{{ (int)$radiusKm }}">
 
                 <div>
-                    <label class="block text-xs text-gray-600 mb-1">位置情報が使えない場合（都道府県起点）</label>
+                    <label class="block text-xs text-gray-600 mb-1">位置情報が使えない場合はコチラ（都道府県起点）</label>
                     <select name="prefecture_id" class="rounded border-gray-300 text-sm">
                         <option value="">選択してください</option>
                         @foreach($prefectures as $p)
