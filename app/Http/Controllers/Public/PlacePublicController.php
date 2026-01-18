@@ -29,7 +29,11 @@ class PlacePublicController extends Controller
             ->limit(12)
             ->get();
 
-        return view('public.home', compact('categories', 'latestPlaces'));
+        $changelogs = collect(config('changelog', []))
+            ->sortByDesc(fn($x) => $x['date'])
+            ->values();
+
+        return view('public.home', compact('categories', 'latestPlaces', 'changelogs'));
     }
 
     public function category(Category $category, Request $request): View
