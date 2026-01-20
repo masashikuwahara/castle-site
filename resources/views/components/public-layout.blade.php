@@ -48,6 +48,7 @@
     <div class="max-w-6xl mx-auto px-4 py-6 text-sm text-gray-500">
         © {{ date('Y') }} Daytripper
     </div>
+    {{-- version.β1.0.0 --}}
 </footer>
 </body>
 </html>
