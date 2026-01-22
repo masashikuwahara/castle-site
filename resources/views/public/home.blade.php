@@ -23,7 +23,7 @@
         <section>
             <div class="flex items-end justify-between mb-3">
                 <h2 class="text-lg font-bold">最近追加した公開コンテンツ</h2>
-                <a class="text-sm text-blue-600 hover:underline" href="{{ route('public.search') }}">全部見る</a>
+                {{-- <a class="text-sm text-blue-600 hover:underline" href="{{ route('public.search') }}">全部見る</a> --}}
             </div>
             @include('public._place_grid', ['places' => $latestPlaces])
         </section>
