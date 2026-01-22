@@ -10,6 +10,9 @@
                 <a href="{{ route('public.about') }}" class="p-4 border rounded hover:bg-gray-50">
                     初めて訪れる人へ
                 </a>
+                <div class="p-4 border rounded hover:bg-gray-50">
+                    Coming Soon
+                </div>
                 {{-- <a href="{{ route('public.near') }}" class="p-4 border rounded hover:bg-gray-50">
                     近くのスポット
                 </a> --}}
