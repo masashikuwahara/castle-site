@@ -1,33 +1,70 @@
 @php
-    $ogImage = $place->thumbnailPhoto ? Storage::url($place->thumbnailPhoto->path) : asset('images/ogp-default.png');
-    // Storage::url は /storage/... なので、og:image には絶対URLが理想（SNSが読めないことがある）
-    // より確実にするなら url() で絶対URL化
-    $ogImage = url($ogImage);
+    $isJa = app()->getLocale() === 'ja';
+    $name = $isJa ? $place->name_ja : ($place->name_en ?? $place->name_ja);
 
-    $desc = $place->short_desc_ja
-        ?: ($place->description_ja ? mb_strimwidth(strip_tags($place->description_ja), 0, 120, '…') : '詳細ページ');
+    $title = $isJa
+        ? "{$place->name_ja}｜見どころ・アクセス・遺構・料金 | Daytripper"
+        : "{$name} | Highlights, Access, Fees | Daytripper";
+
+    $description = $isJa
+        ? trim(($place->short_desc_ja ?: '').' '.$place->prefecture->name_ja.'の城・城跡。開城時間・休城日・料金、遺構や見どころを写真付きで紹介。')
+        : trim(($place->short_desc_en ?: '').' A castle site in '.($place->prefecture->name_en ?? $place->prefecture->name_ja).'. Photos, opening hours, closed days, fees, and highlights.');
+
+    // og imageは絶対URL化
+    $ogImage = $place->thumbnailPhoto
+        ? url(Storage::url($place->thumbnailPhoto->path))
+        : url(asset('images/ogp-default.png'));
+
+    $canonical = route('public.places.show', $place);
+
+    // JSON-LD（最低限）
+    $jsonLd = json_encode([
+        '@context' => 'https://schema.org',
+        '@type' => 'TouristAttraction',
+        'name' => $name,
+        'description' => $description,
+        'url' => $canonical,
+        'image' => $ogImage,
+        'address' => [
+            '@type' => 'PostalAddress',
+            'addressCountry' => 'JP',
+            'addressRegion' => $isJa ? $place->prefecture->name_ja : ($place->prefecture->name_en ?? $place->prefecture->name_ja),
+            'streetAddress' => $isJa ? $place->address_ja : ($place->address_en ?? $place->address_ja),
+        ],
+        'geo' => ($place->lat && $place->lng) ? [
+            '@type' => 'GeoCoordinates',
+            'latitude' => (float)$place->lat,
+            'longitude' => (float)$place->lng,
+        ] : null,
+    ], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
+
+    $breadcrumbLd = json_encode([
+        '@context' => 'https://schema.org',
+        '@type' => 'BreadcrumbList',
+        'itemListElement' => [
+            ['@type'=>'ListItem','position'=>1,'name'=> $isJa ? 'トップ' : 'Home','item'=> route('public.home')],
+            ['@type'=>'ListItem','position'=>2,'name'=> $isJa ? $place->category->name_ja : ($place->category->name_en ?? $place->category->name_ja),
+             'item'=> route('public.categories.show', $place->category)],
+            ['@type'=>'ListItem','position'=>3,'name'=> $name,'item'=> $canonical],
+        ],
+    ], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
+
+    $jsonLdBlock = '<script type="application/ld+json">'.$jsonLd.'</script>'
+                 . '<script type="application/ld+json">'.$breadcrumbLd.'</script>';
 @endphp
 
 <x-public-layout
     {{-- :title="$place->name_ja . '｜城・文化財'"
-    :description="$desc"
+    :description="$description"
     :ogImage="$ogImage"
-    :ogUrl="route('public.places.show', $place)"> --}}
-    @php
-        $isJa = app()->getLocale() === 'ja';
-        $name = $isJa ? $place->name_ja : ($place->name_en ?? $place->name_ja);
-
-        $title = $isJa
-            ? "{$place->name_ja}｜見どころ・アクセス・遺構・料金 | Daytripper"
-            : "{$name} | Highlights, Access, Fees | Daytripper";
-
-        $description = $isJa
-            ? trim(($place->short_desc_ja ?: '').' '.$place->prefecture->name_ja.'の城・城跡。開城時間・休城日・料金、遺構や見どころを写真付きで紹介。')
-            : trim(($place->short_desc_en ?: '').' A castle site in '.$place->prefecture->name_en.'. Photos, opening hours, closed days, fees, and highlights.');
-
-        $ogImage = $place->thumbnailPhoto ? Storage::url($place->thumbnailPhoto->path) : null;
-    @endphp
-
+    :ogUrl="route('public.places.show', $place)" --}}
+    :title="$title"
+    :description="$description"
+    :canonical="$canonical"
+    :ogImage="$ogImage"
+    :ogUrl="$canonical"
+    :jsonLd="$jsonLdBlock"
+    >
 
     <div class="space-y-6">
         <div class="space-y-2">
@@ -53,7 +90,7 @@
         {{-- サムネ --}}
         @if($place->thumbnailPhoto)
             <div class="bg-white rounded shadow overflow-hidden">
-                <img src="{{ Storage::url($place->thumbnailPhoto->path) }}" class="w-full max-h-[520px] object-cover" alt="">
+                <img src="{{ Storage::url($place->thumbnailPhoto->path) }}" class="w-full max-h-[520px] object-cover" alt="{{ $place->name_ja }} の写真">
                 @if($place->thumbnailPhoto->caption_ja)
                     <div class="p-3 text-sm text-gray-600">{{ $place->thumbnailPhoto->caption_ja }}</div>
                 @endif
@@ -138,7 +175,7 @@
                         data-src="{{ url(Storage::url($photo->path)) }}"
                         data-caption="{{ e($cap ?? '') }}"
                     >
-                        <img src="{{ Storage::url($photo->path) }}" class="w-full aspect-square object-cover" alt="">
+                        <img src="{{ Storage::url($photo->path) }}" class="w-full aspect-square object-cover" alt="{{ $place->name_ja }} の写真">
                         @if($cap)
                             <div class="p-2 text-xs text-gray-600">{{ $cap }}</div>
                         @endif

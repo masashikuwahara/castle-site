@@ -1,63 +1,63 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    {{-- @php
-        $metaTitle = $title ?? '城・文化財';
-        $metaDescription = $description ?? '訪れた城・文化財を写真とメモで紹介する記録サイト。';
-        $metaUrl = $ogUrl ?? request()->fullUrl();
-        $metaImage = $ogImage ?? asset('images/ogp-default.png'); // とりあえずのデフォルト
-    @endphp
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $metaTitle }}</title>
-    <meta name="description" content="{{ $metaDescription }}">
-
-    <meta property="og:title" content="{{ $metaTitle }}">
-    <meta property="og:description" content="{{ $metaDescription }}">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ $metaUrl }}">
-    <meta property="og:image" content="{{ $metaImage }}">
-
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ $metaTitle }}">
-    <meta name="twitter:description" content="{{ $metaDescription }}">
-    <meta name="twitter:image" content="{{ $metaImage }}">
-    @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
-
     @php
-        $locale = app()->getLocale(); // 'ja' or 'en'
+        $locale = app()->getLocale();
         $siteName = 'Daytripper';
+
         $defaultTitle = $locale === 'ja'
             ? 'Daytripper｜城・城跡の日帰り旅行ガイド'
             : 'Daytripper | Day-trip guide to Japanese castles';
+
         $defaultDesc = $locale === 'ja'
             ? '日本各地の城・城跡を写真付きで紹介。見どころ、アクセス、周辺散策、タグ検索、現在地から近い城も。'
             : 'Explore Japanese castles and ruins with photos. Highlights, access, tags, and nearby places from your location.';
+
+        $metaTitle = $title ?? $defaultTitle;
+        $metaDesc  = $description ?? $defaultDesc;
+
+        $metaCanonical = $canonical ?? url()->current();
+        $metaOgUrl = $ogUrl ?? $metaCanonical;
+
+        // ★重要：ogImage は “絶対URL” 推奨
+        $metaOgImage = $ogImage ?? url(asset('images/ogp-default.png'));
+
+        $metaOgTitle = $ogTitle ?? $metaTitle;
+        $metaOgDesc  = $ogDescription ?? $metaDesc;
+
+        $metaTwitterTitle = $twitterTitle ?? $metaTitle;
+        $metaTwitterDesc  = $twitterDescription ?? $metaDesc;
+        $metaTwitterImage = $twitterImage ?? $metaOgImage;
     @endphp
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $title ?? $defaultTitle }}</title>
-    <meta name="description" content="{{ $description ?? $defaultDesc }}">
 
-    <link rel="canonical" href="{{ $canonical ?? url()->current() }}">
+    <title>{{ $metaTitle }}</title>
+    <meta name="description" content="{{ $metaDesc }}">
 
-    <meta property="og:site_name" content="{{ $siteName }}">
-    <meta property="og:title" content="{{ $ogTitle ?? ($title ?? $defaultTitle) }}">
-    <meta property="og:description" content="{{ $ogDescription ?? ($description ?? $defaultDesc) }}">
-    <meta property="og:type" content="{{ $ogType ?? 'website' }}">
-    <meta property="og:url" content="{{ $ogUrl ?? ($canonical ?? url()->current()) }}">
-    @if(!empty($ogImage))
-        <meta property="og:image" content="{{ $ogImage }}">
+    @if(!empty($robots))
+        <meta name="robots" content="{{ $robots }}">
     @endif
 
+    <link rel="canonical" href="{{ $metaCanonical }}">
+
+    <meta property="og:site_name" content="{{ $siteName }}">
+    <meta property="og:title" content="{{ $metaOgTitle }}">
+    <meta property="og:description" content="{{ $metaOgDesc }}">
+    <meta property="og:type" content="{{ $ogType ?? 'website' }}">
+    <meta property="og:url" content="{{ $metaOgUrl }}">
+    <meta property="og:image" content="{{ $metaOgImage }}">
+
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ $twitterTitle ?? ($title ?? $defaultTitle) }}">
-    <meta name="twitter:description" content="{{ $twitterDescription ?? ($description ?? $defaultDesc) }}">
+    <meta name="twitter:title" content="{{ $metaTwitterTitle }}">
+    <meta name="twitter:description" content="{{ $metaTwitterDesc }}">
+    <meta name="twitter:image" content="{{ $metaTwitterImage }}">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @if(!empty($ogImage))
-        <meta name="twitter:image" content="{{ $ogImage }}">
+
+    @if(!empty($jsonLd))
+        {!! $jsonLd !!}
     @endif
 
 </head>

@@ -1,6 +1,7 @@
 <x-public-layout
-    title="検索｜城・文化財"
-    :description="$q ? '「'.$q.'」の検索結果ページ。' : 'キーワード検索ページ。'">
+  title="検索結果：{{ $q }} | Daytripper"
+  robots="noindex,follow"
+>
 
     <div class="space-y-4">
         <div class="flex items-end justify-between">
