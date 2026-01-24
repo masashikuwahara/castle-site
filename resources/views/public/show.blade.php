@@ -9,10 +9,25 @@
 @endphp
 
 <x-public-layout
-    :title="$place->name_ja . '｜城・文化財'"
+    {{-- :title="$place->name_ja . '｜城・文化財'"
     :description="$desc"
     :ogImage="$ogImage"
-    :ogUrl="route('public.places.show', $place)">
+    :ogUrl="route('public.places.show', $place)"> --}}
+    @php
+        $isJa = app()->getLocale() === 'ja';
+        $name = $isJa ? $place->name_ja : ($place->name_en ?? $place->name_ja);
+
+        $title = $isJa
+            ? "{$place->name_ja}｜見どころ・アクセス・遺構・料金 | Daytripper"
+            : "{$name} | Highlights, Access, Fees | Daytripper";
+
+        $description = $isJa
+            ? trim(($place->short_desc_ja ?: '').' '.$place->prefecture->name_ja.'の城・城跡。開城時間・休城日・料金、遺構や見どころを写真付きで紹介。')
+            : trim(($place->short_desc_en ?: '').' A castle site in '.$place->prefecture->name_en.'. Photos, opening hours, closed days, fees, and highlights.');
+
+        $ogImage = $place->thumbnailPhoto ? Storage::url($place->thumbnailPhoto->path) : null;
+    @endphp
+
 
     <div class="space-y-6">
         <div class="space-y-2">
