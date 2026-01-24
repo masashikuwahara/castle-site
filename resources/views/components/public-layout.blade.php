@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    @php
+    {{-- @php
         $metaTitle = $title ?? '城・文化財';
         $metaDescription = $description ?? '訪れた城・文化財を写真とメモで紹介する記録サイト。';
         $metaUrl = $ogUrl ?? request()->fullUrl();
@@ -23,7 +23,43 @@
     <meta name="twitter:title" content="{{ $metaTitle }}">
     <meta name="twitter:description" content="{{ $metaDescription }}">
     <meta name="twitter:image" content="{{ $metaImage }}">
+    @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
+
+    @php
+        $locale = app()->getLocale(); // 'ja' or 'en'
+        $siteName = 'Daytripper';
+        $defaultTitle = $locale === 'ja'
+            ? 'Daytripper｜城・城跡の日帰り旅行ガイド'
+            : 'Daytripper | Day-trip guide to Japanese castles';
+        $defaultDesc = $locale === 'ja'
+            ? '日本各地の城・城跡を写真付きで紹介。見どころ、アクセス、周辺散策、タグ検索、現在地から近い城も。'
+            : 'Explore Japanese castles and ruins with photos. Highlights, access, tags, and nearby places from your location.';
+    @endphp
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ $title ?? $defaultTitle }}</title>
+    <meta name="description" content="{{ $description ?? $defaultDesc }}">
+
+    <link rel="canonical" href="{{ $canonical ?? url()->current() }}">
+
+    <meta property="og:site_name" content="{{ $siteName }}">
+    <meta property="og:title" content="{{ $ogTitle ?? ($title ?? $defaultTitle) }}">
+    <meta property="og:description" content="{{ $ogDescription ?? ($description ?? $defaultDesc) }}">
+    <meta property="og:type" content="{{ $ogType ?? 'website' }}">
+    <meta property="og:url" content="{{ $ogUrl ?? ($canonical ?? url()->current()) }}">
+    @if(!empty($ogImage))
+        <meta property="og:image" content="{{ $ogImage }}">
+    @endif
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $twitterTitle ?? ($title ?? $defaultTitle) }}">
+    <meta name="twitter:description" content="{{ $twitterDescription ?? ($description ?? $defaultDesc) }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @if(!empty($ogImage))
+        <meta name="twitter:image" content="{{ $ogImage }}">
+    @endif
+
 </head>
 <body class="bg-gray-50 text-gray-900">
 <header class="border-b bg-white">
