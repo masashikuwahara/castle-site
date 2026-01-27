@@ -54,6 +54,10 @@
     <meta name="twitter:description" content="{{ $metaTwitterDesc }}">
     <meta name="twitter:image" content="{{ $metaTwitterImage }}">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@600;700&display=swap" rel="stylesheet">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @if(!empty($jsonLd))
@@ -61,30 +65,45 @@
     @endif
 
 </head>
-<body class="bg-gray-50 text-gray-900">
-<header class="border-b bg-white">
-    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
-        <a href="{{ route('public.home') }}" class="font-bold text-lg">Daytripper</a>
-        <form action="{{ route('public.search') }}" method="GET" class="flex gap-2 w-full max-w-md">
+<body class="bg-washi text-slate-900 antialiased"
+      style="font-family: 'Noto Sans JP', ui-sans-serif, system-ui;">
+
+<header class="sticky top-0 z-40 backdrop-blur bg-[#fbfaf7]/85 border-b border-slate-900/10">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+        <a href="{{ route('public.home') }}" class="flex items-center gap-3">
+            <span class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-900/15 bg-white/60 shadow-sm">
+                <span class="text-sm" style="font-family:'Noto Serif JP', serif;">旅</span>
+            </span>
+            <div class="leading-tight">
+                <div class="text-lg tracking-wide" style="font-family:'Noto Serif JP', serif;">Daytripper</div>
+                <div class="text-xs text-slate-600">城・城跡の日帰り旅行ガイド</div>
+            </div>
+        </a>
+
+        <form action="{{ route('public.search') }}" method="GET"
+              class="flex gap-2 w-full max-w-md">
             <input name="q" value="{{ request('q') }}"
-                class="w-full rounded border-gray-300"
-                placeholder="城名などを入力">
-            <button class="px-4 py-2 bg-gray-900 text-white rounded whitespace-nowrap shrink-0">
+                class="w-full rounded-xl border border-slate-900/15 bg-white/70 px-3 py-2
+                       placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/15"
+                placeholder="城名・地域・タグなど">
+            <button class="px-4 py-2 rounded-xl whitespace-nowrap shrink-0 text-white
+                           bg-[#233d5d] hover:bg-[#2b4a6f] shadow-sm">
                 検索
             </button>
         </form>
     </div>
 </header>
 
-<main class="max-w-6xl mx-auto px-4 py-6">
+<main class="max-w-6xl mx-auto px-4 py-8">
     {{ $slot }}
 </main>
 
-<footer class="border-t bg-white">
-    <div class="max-w-6xl mx-auto px-4 py-6 text-sm text-gray-500">
-        © {{ date('Y') }} Daytripper
+<footer class="border-t border-slate-900/10 bg-[#fbfaf7]">
+    <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-slate-600 flex items-center justify-between">
+        <span>© {{ date('Y') }} Daytripper</span>
     </div>
     {{-- version.β1.0.0 --}}
 </footer>
+
 </body>
 </html>

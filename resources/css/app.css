@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.bg-washi {
+  background-color: #fbfaf7;
+  background-image: radial-gradient(rgba(31,35,40,.06) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
