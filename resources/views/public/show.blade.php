@@ -67,76 +67,169 @@
     >
 
     <div class="space-y-6">
-        <div class="space-y-2">
-            <div class="text-sm text-gray-500">
-                <a class="hover:underline" href="{{ route('public.categories.show', $place->category) }}">{{ $place->category?->name_ja }}</a>
-                /
-                {{ $place->prefecture?->name_ja }}
-            </div>
-            <h1 class="text-2xl font-bold">{{ $place->name_ja }}</h1>
+        <div class="space-y-8">
+        {{-- 上部：パンくず + タイトル + タグ --}}
+        <section class="space-y-3">
+            <nav class="text-xs text-slate-600">
+                <ol class="flex flex-wrap items-center gap-2">
+                    <li><a class="hover:text-[#233d5d] hover:underline" href="{{ route('public.home') }}">トップ</a></li>
+                    <li class="opacity-60">/</li>
+                    <li>
+                        <a class="hover:text-[#233d5d] hover:underline" href="{{ route('public.categories.show', $place->category) }}">
+                            {{ $place->category?->name_ja }}
+                        </a>
+                    </li>
+                    <li class="opacity-60">/</li>
+                    <li class="text-slate-900 font-medium">{{ $place->prefecture?->name_ja }}</li>
+                </ol>
+            </nav>
+
+            <h1 class="text-2xl md:text-3xl tracking-wide leading-tight"
+                style="font-family:'Noto Serif JP', serif;">
+                {{ $place->name_ja }}
+            </h1>
+
             @if($place->name_en)
-                <div class="text-gray-600">{{ $place->name_en }}</div>
+                <div class="text-sm text-slate-600">{{ $place->name_en }}</div>
             @endif
 
-            <div class="flex flex-wrap gap-2">
-                @foreach($place->tags as $tag)
-                    <a href="{{ route('public.tags.show', $tag) }}" class="px-3 py-1 bg-gray-100 rounded hover:bg-gray-200 text-sm">
-                        #{{ $tag->name_ja }}
-                    </a>
-                @endforeach
-            </div>
-        </div>
+            @if($place->tags?->isNotEmpty())
+                <div class="flex flex-wrap gap-2 pt-1">
+                    @foreach($place->tags as $tag)
+                        <a href="{{ route('public.tags.show', $tag) }}"
+                        class="px-3 py-1 rounded-full text-sm
+                                border border-slate-900/10 bg-white/60 hover:bg-white">
+                            #{{ $tag->name_ja }}
+                        </a>
+                    @endforeach
+                </div>
+            @endif
+        </section>
 
-        {{-- サムネ --}}
+        {{-- メイン写真 --}}
         @if($place->thumbnailPhoto)
-            <div class="bg-white rounded shadow overflow-hidden">
-                <img src="{{ Storage::url($place->thumbnailPhoto->path) }}" class="w-full max-h-[520px] object-cover" alt="{{ $place->name_ja }} の写真">
+            <section class="rounded-2xl border border-slate-900/10 bg-white/60 shadow-sm overflow-hidden">
+                <img src="{{ Storage::url($place->thumbnailPhoto->path) }}"
+                    class="w-full max-h-[520px] object-cover"
+                    alt="{{ $place->name_ja }} の写真">
+
                 @if($place->thumbnailPhoto->caption_ja)
-                    <div class="p-3 text-sm text-gray-600">{{ $place->thumbnailPhoto->caption_ja }}</div>
+                    <div class="px-5 py-4 text-sm text-slate-600 bg-[#fbfaf7]/60 border-t border-slate-900/10">
+                        {{ $place->thumbnailPhoto->caption_ja }}
+                    </div>
                 @endif
-            </div>
+            </section>
         @endif
 
-        {{-- 基本情報 --}}
-        <div class="bg-white rounded shadow p-5">
-            <h2 class="text-lg font-bold mb-4">基本情報</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                <div><span class="text-gray-500">城郭構造：</span>{{ $place->castle_style_ja }}</div>
-                <div><span class="text-gray-500">天守構造：</span>{{ $place->tenshu_style_ja }}</div>
-                <div><span class="text-gray-500">築城主：</span>{{ $place->builder_ja }}</div>
-                <div><span class="text-gray-500">築城年：</span>{{ $place->built_year }}</div>
-                <div><span class="text-gray-500">廃城年：</span>{{ $place->abolished_year }}</div>
-                <div><span class="text-gray-500">主な改修者：</span>{{ $place->renovator_ja }}</div>
-                <div class="md:col-span-2"><span class="text-gray-500">主な城主：</span>{!! nl2br(e($place->main_lords_ja)) !!}</div>
-                <div class="md:col-span-2"><span class="text-gray-500">指定文化財：</span>{{ $place->heritage_designation_ja }}</div>
-                <div class="md:col-span-2"><span class="text-gray-500">遺構：</span>{!! nl2br(e($place->remains_ja)) !!}</div>
-                <div><span class="text-gray-500">おすすめ度：</span>{{ $place->rating ? str_repeat('★', (int)$place->rating) : '' }}</div>
-                <div><span class="text-gray-500">住所：</span>{{ $place->address_ja }}</div>
-                @if($place->opening_hours_ja)
-                    <div class="md:col-span-2"><span class="text-gray-500">開城時間：</span>{!! nl2br(e($place->opening_hours_ja)) !!}</div>
-                @endif
-                @if($place->closed_days_ja)
-                    <div class="md:col-span-2"><span class="text-gray-500">休城日：</span>{{ $place->closed_days_ja }}</div>
-                @endif
-                @if($place->admission_fee_ja)
-                    <div class="md:col-span-2"><span class="text-gray-500">入城料金：</span>{{ $place->admission_fee_ja }}</div>
+        {{-- 基本情報（“札”レイアウト） --}}
+        <section class="rounded-2xl border border-slate-900/10 bg-white/60 shadow-sm p-5 md:p-6">
+            <div class="flex items-center gap-3 mb-4">
+                <h2 class="text-lg tracking-wide" style="font-family:'Noto Serif JP', serif;">基本情報</h2>
+                <div class="h-px flex-1 bg-slate-900/10"></div>
+
+                @if(!empty($place->rating))
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-md border border-[#c2412d]/25 bg-[#fbfaf7] text-[#a83626] text-xs shadow-sm">
+                        おすすめ {{ str_repeat('★', (int)$place->rating) }}
+                    </span>
                 @endif
             </div>
-        </div>
+
+            <dl class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                {{-- 1項目＝札 --}}
+                <div class="rounded-xl border border-slate-900/10 bg-white/60 p-3">
+                    <dt class="text-xs text-slate-600">城郭構造</dt>
+                    <dd class="mt-1 text-slate-900">{{ $place->castle_style_ja }}</dd>
+                </div>
+
+                <div class="rounded-xl border border-slate-900/10 bg-white/60 p-3">
+                    <dt class="text-xs text-slate-600">天守構造</dt>
+                    <dd class="mt-1 text-slate-900">{{ $place->tenshu_style_ja }}</dd>
+                </div>
+
+                <div class="rounded-xl border border-slate-900/10 bg-white/60 p-3">
+                    <dt class="text-xs text-slate-600">築城主</dt>
+                    <dd class="mt-1 text-slate-900">{{ $place->builder_ja }}</dd>
+                </div>
+
+                <div class="rounded-xl border border-slate-900/10 bg-white/60 p-3">
+                    <dt class="text-xs text-slate-600">築城年</dt>
+                    <dd class="mt-1 text-slate-900">{{ $place->built_year }}</dd>
+                </div>
+
+                <div class="rounded-xl border border-slate-900/10 bg-white/60 p-3">
+                    <dt class="text-xs text-slate-600">廃城年</dt>
+                    <dd class="mt-1 text-slate-900">{{ $place->abolished_year }}</dd>
+                </div>
+
+                <div class="rounded-xl border border-slate-900/10 bg-white/60 p-3">
+                    <dt class="text-xs text-slate-600">主な改修者</dt>
+                    <dd class="mt-1 text-slate-900">{{ $place->renovator_ja }}</dd>
+                </div>
+
+                <div class="md:col-span-2 rounded-xl border border-slate-900/10 bg-white/60 p-3">
+                    <dt class="text-xs text-slate-600">主な城主</dt>
+                    <dd class="mt-1 text-slate-900 leading-relaxed">{!! nl2br(e($place->main_lords_ja)) !!}</dd>
+                </div>
+
+                <div class="md:col-span-2 rounded-xl border border-slate-900/10 bg-white/60 p-3">
+                    <dt class="text-xs text-slate-600">指定文化財</dt>
+                    <dd class="mt-1 text-slate-900">{{ $place->heritage_designation_ja }}</dd>
+                </div>
+
+                <div class="md:col-span-2 rounded-xl border border-slate-900/10 bg-white/60 p-3">
+                    <dt class="text-xs text-slate-600">遺構</dt>
+                    <dd class="mt-1 text-slate-900 leading-relaxed">{!! nl2br(e($place->remains_ja)) !!}</dd>
+                </div>
+
+                <div class="md:col-span-2 rounded-xl border border-slate-900/10 bg-white/60 p-3">
+                    <dt class="text-xs text-slate-600">住所</dt>
+                    <dd class="mt-1 text-slate-900">{{ $place->address_ja }}</dd>
+                </div>
+
+                @if($place->opening_hours_ja)
+                    <div class="md:col-span-2 rounded-xl border border-slate-900/10 bg-white/60 p-3">
+                        <dt class="text-xs text-slate-600">開城時間</dt>
+                        <dd class="mt-1 text-slate-900 leading-relaxed">{!! nl2br(e($place->opening_hours_ja)) !!}</dd>
+                    </div>
+                @endif
+
+                @if($place->closed_days_ja)
+                    <div class="md:col-span-2 rounded-xl border border-slate-900/10 bg-white/60 p-3">
+                        <dt class="text-xs text-slate-600">休城日</dt>
+                        <dd class="mt-1 text-slate-900">{{ $place->closed_days_ja }}</dd>
+                    </div>
+                @endif
+
+                @if($place->admission_fee_ja)
+                    <div class="md:col-span-2 rounded-xl border border-slate-900/10 bg-white/60 p-3">
+                        <dt class="text-xs text-slate-600">入城料金</dt>
+                        <dd class="mt-1 text-slate-900">{{ $place->admission_fee_ja }}</dd>
+                    </div>
+                @endif
+            </dl>
+        </section>
 
         {{-- 概要 --}}
         @if($place->description_ja)
-            <div class="bg-white rounded shadow p-5">
-                <h2 class="text-lg font-bold mb-4">概要</h2>
-                <div class="prose max-w-none">
+            <section class="rounded-2xl border border-slate-900/10 bg-white/60 shadow-sm p-5 md:p-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <h2 class="text-lg tracking-wide" style="font-family:'Noto Serif JP', serif;">概要</h2>
+                    <div class="h-px flex-1 bg-slate-900/10"></div>
+                </div>
+
+                <div class="prose max-w-none prose-slate">
                     {!! nl2br(e($place->description_ja)) !!}
                 </div>
-            </div>
+            </section>
         @endif
 
         {{-- Map --}}
-        <div class="bg-white rounded shadow p-5 space-y-3">
-            <h2 class="text-lg font-bold">地図</h2>
+        <section class="rounded-2xl border border-slate-900/10 bg-white/60 shadow-sm p-5 md:p-6 space-y-3">
+            <div class="flex items-center gap-3">
+                <h2 class="text-lg tracking-wide" style="font-family:'Noto Serif JP', serif;">地図</h2>
+                <div class="h-px flex-1 bg-slate-900/10"></div>
+            </div>
+
             @php
                 $mapQuery = null;
                 if (!is_null($place->lat) && !is_null($place->lng)) {
@@ -148,43 +241,55 @@
 
             @if($mapQuery)
                 <iframe
-                    class="w-full h-[360px] rounded"
+                    class="w-full h-[360px] rounded-xl border border-slate-900/10"
                     loading="lazy"
                     referrerpolicy="no-referrer-when-downgrade"
                     src="https://www.google.com/maps?q={{ urlencode($mapQuery) }}&output=embed">
                 </iframe>
+                <div class="text-xs text-slate-600">
+                    ※ 地図がずれる場合は住所表記（町名/番地）を調整すると改善することがあります。
+                </div>
             @else
-                <div class="text-sm text-gray-500">地図を表示するには住所または緯度経度を登録してください。</div>
+                <div class="text-sm text-slate-600">地図を表示するには住所または緯度経度を登録してください。</div>
             @endif
-        </div>
+        </section>
 
-        {{-- 写真ギャラリー（登録している場合） --}}
+        {{-- 写真ギャラリー --}}
         @if($place->galleryPhotos->count() > 0)
-            <div class="space-y-3">
-                <h2 class="text-lg font-bold">写真</h2>
+            <section class="space-y-4">
+                <div class="flex items-center gap-3">
+                    <h2 class="text-lg tracking-wide" style="font-family:'Noto Serif JP', serif;">写真</h2>
+                    <div class="h-px flex-1 bg-slate-900/10"></div>
+                </div>
+
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                     @foreach($place->galleryPhotos as $photo)
-                    @php
-                        $cap = $photo->caption_ja ?: $photo->caption_en;
-                    @endphp
+                        @php $cap = $photo->caption_ja ?: $photo->caption_en; @endphp
 
-                    <button
-                        type="button"
-                        class="bg-white rounded shadow overflow-hidden text-left hover:shadow-md transition"
-                        data-gallery="place-gallery"
-                        data-src="{{ url(Storage::url($photo->path)) }}"
-                        data-caption="{{ e($cap ?? '') }}"
-                    >
-                        <img src="{{ Storage::url($photo->path) }}" class="w-full aspect-square object-cover" alt="{{ $place->name_ja }} の写真">
-                        @if($cap)
-                            <div class="p-2 text-xs text-gray-600">{{ $cap }}</div>
-                        @endif
-                    </button>
+                        <button
+                            type="button"
+                            class="group rounded-2xl border border-slate-900/10 bg-white/60 shadow-sm overflow-hidden text-left
+                                hover:shadow-md transition"
+                            data-gallery="place-gallery"
+                            data-src="{{ url(Storage::url($photo->path)) }}"
+                            data-caption="{{ e($cap ?? '') }}"
+                        >
+                            <img src="{{ Storage::url($photo->path) }}"
+                                class="w-full aspect-square object-cover group-hover:scale-[1.02] transition"
+                                alt="{{ $place->name_ja }} の写真">
+
+                            @if($cap)
+                                <div class="p-3 text-xs text-slate-600 bg-[#fbfaf7]/60 border-t border-slate-900/10 line-clamp-2">
+                                    {{ $cap }}
+                                </div>
+                            @endif
+                        </button>
                     @endforeach
                 </div>
-            </div>
+            </section>
         @endif
     </div>
+
     {{-- Gallery Modal --}}
     <div id="galleryModal" class="fixed inset-0 z-50 hidden" data-close="1">
         {{-- overlay --}}
@@ -195,7 +300,7 @@
             <div class="relative max-w-5xl w-full" data-close="0">
                 {{-- close --}}
                 <button id="galleryClose"
-                        class="absolute -top-10 right-0 text-white text-sm px-3 py-2 rounded bg-black/40 hover:bg-black/60">
+                        class="absolute -top-10 right-0 text-white text-sm px-3 py-2 rounded-xl border border-white/20 bg-black/40 hover:bg-black/60 backdrop-blur">
                     閉じる（Esc）
                 </button>
 

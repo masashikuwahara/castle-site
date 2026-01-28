@@ -39,9 +39,7 @@
                 {{-- おすすめ（朱のスタンプ感） --}}
                 @if(!empty($place->rating))
                     <div class="text-xs inline-flex items-center gap-2">
-                        <span class="inline-flex items-center px-2 py-0.5 rounded-md
-                                     border border-[#c2412d]/25 bg-[#fbfaf7] text-[#a83626]
-                                     rotate-[-1deg]">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-md border border-[#c2412d]/25 bg-[#fbfaf7] text-[#a83626] text-xs shadow-sm">
                             おすすめ
                         </span>
                         <span class="text-slate-700 tabular-nums">
