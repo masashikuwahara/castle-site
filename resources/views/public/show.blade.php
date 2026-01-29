@@ -68,27 +68,18 @@
 
     <div class="space-y-6">
         <div class="space-y-8">
-        {{-- 上部：パンくず + タイトル + タグ --}}
         <section class="space-y-3">
-            <nav class="text-xs text-slate-600">
-                <ol class="flex flex-wrap items-center gap-2">
-                    <li><a class="hover:text-[#233d5d] hover:underline" href="{{ route('public.home') }}">トップ</a></li>
-                    <li class="opacity-60">/</li>
-                    <li>
-                        <a class="hover:text-[#233d5d] hover:underline" href="{{ route('public.categories.show', $place->category) }}">
-                            {{ $place->category?->name_ja }}
-                        </a>
-                    </li>
-                    <li class="opacity-60">/</li>
-                    <li class="text-slate-900 font-medium">{{ $place->prefecture?->name_ja }}</li>
-                </ol>
-            </nav>
-
+            @include('public._breadcrumb', [
+                'items' => [
+                    ['label' => 'トップ', 'url' => route('public.home')],
+                    ['label' => $place->category?->name_ja ?? 'カテゴリ', 'url' => route('public.categories.show', $place->category)],
+                    ['label' => $place->prefecture?->name_ja ?? '都道府県', 'url' => null],
+                ]
+            ])
             <h1 class="text-2xl md:text-3xl tracking-wide leading-tight"
                 style="font-family:'Noto Serif JP', serif;">
                 {{ $place->name_ja }}
             </h1>
-
             @if($place->name_en)
                 <div class="text-sm text-slate-600">{{ $place->name_en }}</div>
             @endif
