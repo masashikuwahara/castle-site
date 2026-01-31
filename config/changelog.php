@@ -14,9 +14,9 @@ return [
     //     'url' => null,
     // ],
     [
-        'date' => '2026-01-19',
-        'title_ja' => 'ベータ版公開しました',
-        'title_en' => 'Beta version released',
+        'date' => '2026-02-01',
+        'title_ja' => 'リニューアルしました',
+        'title_en' => 'The renewed version has been released',
         'url' => '/',
     ],
 ];

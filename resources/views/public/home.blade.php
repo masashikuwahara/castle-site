@@ -4,7 +4,6 @@
 
     <div class="space-y-10">
 
-        {{-- Hero + Menu 統合 --}}
         <section class="rounded-2xl border border-slate-900/10 bg-white/60 shadow-sm overflow-hidden">
             <div class="p-6 md:p-8">
                 <div class="flex flex-wrap items-center gap-3">
@@ -12,17 +11,12 @@
                         style="font-family:'Noto Serif JP', serif;">
                         Daytripper｜城・文化財の記録
                     </h1>
-                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs
-                                 border border-slate-900/10 bg-[#fbfaf7] text-slate-700">
-                        ベータ版
-                    </span>
                 </div>
 
                 <p class="mt-3 text-slate-700 leading-relaxed">
                     写真つきで、見どころ・アクセス・周辺散策をまとめています。上部の検索から城名やタグで探せます。
                 </p>
 
-                {{-- まず押してほしい導線（メニュー） --}}
                 <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
                     <a href="{{ route('public.about') }}"
                        class="p-4 rounded-xl border border-slate-900/10 bg-white/70 hover:bg-white shadow-sm">
@@ -46,22 +40,21 @@
                 </div>
 
                 {{-- 小さめの補助導線（検索を促す） --}}
-                <div class="mt-5 text-xs text-slate-600 flex flex-wrap gap-x-5 gap-y-2">
+                {{-- <div class="mt-5 text-xs text-slate-600 flex flex-wrap gap-x-5 gap-y-2">
                     <span>・検索：城名 / 地域 / タグ</span>
                     <span>・写真つき</span>
                     <span>・日本100名城 / 続100名城 / 城跡</span>
-                </div>
+                </div> --}}
             </div>
 
             <div class="h-px bg-slate-900/10"></div>
 
             {{-- ちょい和風な飾り（任意） --}}
-            <div class="px-6 md:px-8 py-3 text-xs text-slate-600 bg-[#fbfaf7]/60">
+            {{-- <div class="px-6 md:px-8 py-3 text-xs text-slate-600 bg-[#fbfaf7]/60">
                 「旅の手帖」みたいに、少しずつ積み上げていきます。
-            </div>
+            </div> --}}
         </section>
 
-        {{-- 最近追加 --}}
         <section class="space-y-4">
             <div class="flex items-center gap-3">
                 <h2 class="text-lg tracking-wide" style="font-family:'Noto Serif JP', serif;">最近追加した公開コンテンツ</h2>
@@ -70,7 +63,6 @@
             @include('public._place_grid', ['places' => $latestPlaces])
         </section>
 
-        {{-- 更新履歴（元のままでもOK。カード化だけ） --}}
         @php
             $logs = $changelogs ?? collect();
             $newBorder = now()->subDays(7);
