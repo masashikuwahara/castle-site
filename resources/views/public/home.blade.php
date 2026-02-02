@@ -98,8 +98,7 @@
 
                                 @if($isNew)
                                     <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-md
-                                                 border border-[#c2412d]/25 bg-[#fbfaf7] text-[#a83626] text-xs
-                                                 rotate-[-2deg]">
+                                                 border border-[#c2412d]/25 bg-[#fbfaf7] text-[#a83626] text-xs shadow-sm">
                                         NEW
                                     </span>
                                 @endif
