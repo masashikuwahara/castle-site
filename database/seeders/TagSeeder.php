@@ -35,7 +35,8 @@ class TagSeeder extends Seeder
             // ['name_ja'=>'古代城柵','name_en'=>'ancient castle fence','slug'=>'jousaku'],
             // ['name_ja'=>'古代山城','name_en'=>'ancient mountain castle','slug'=>'kodaiyamajiro'],
             // ['name_ja'=>'曲輪','name_en'=>'kuruwa','slug'=>'kuruwa'],
-            ['name_ja'=>'虎口','name_en'=>'Koguchi','slug'=>'koguchi'],
+            // ['name_ja'=>'虎口','name_en'=>'Koguchi','slug'=>'koguchi'],
+            ['name_ja'=>'復興天守','name_en'=>'reconstruction castle tower','slug'=>'reconstruction-castle-tower'],
         ];
 
         foreach ($rows as $row) {
