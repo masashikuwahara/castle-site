@@ -6,7 +6,6 @@
     <div class="space-y-4">
         <div class="flex items-end justify-between">
             <h1 class="text-xl font-bold">検索</h1>
-            <div class="text-sm text-gray-500">{{ $places->total() }}件</div>
         </div>
         @if(!empty($alert))
     <div class="mb-4 rounded border border-amber-200 bg-amber-50 px-4 py-3 text-amber-800 text-sm">
@@ -25,6 +24,7 @@
             </div>
         @endif
 
+        <div class="text-sm text-gray-500">{{ $places->total() }}件</div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
             @foreach($places as $place)
             @endforeach
