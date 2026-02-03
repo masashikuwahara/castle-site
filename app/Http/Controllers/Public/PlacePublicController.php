@@ -15,12 +15,10 @@ class PlacePublicController extends Controller
 {
     public function home(): View
     {
-        // メニューに出すカテゴリ（sort_order順）
         $categories = Category::query()
             ->orderBy('sort_order')
             ->get();
 
-        // 最新の公開Placeを少しだけ（トップに出す用）
         $latestPlaces = Place::query()
             ->published()
             ->with(['category', 'prefecture', 'thumbnailPhoto', 'tags'])
@@ -77,6 +75,15 @@ class PlacePublicController extends Controller
     {
         $q = trim((string) $request->query('q', ''));
 
+        if ($q === '') {
+            return view('public.search', [
+                'q' => '',
+                'places' => null,
+                'tags' => [],
+                'alert' => '何かキーワードを入力してください。',
+            ]);
+        }
+
         $places = Place::query()
             ->published()
             ->with(['category', 'prefecture', 'thumbnailPhoto', 'tags'])
@@ -86,17 +93,19 @@ class PlacePublicController extends Controller
             ->paginate(24)
             ->withQueryString();
 
-        // タグ候補（超簡易：検索語を含むタグ）
-        $tags = [];
-        if ($q !== '') {
-            $tags = Tag::query()
-                ->where('name_ja', 'like', "%{$q}%")
-                ->orWhere('name_en', 'like', "%{$q}%")
-                ->limit(20)
-                ->get();
-        }
+        // タグ候補（検索語を含むタグ）
+        $tags = Tag::query()
+            ->where('name_ja', 'like', "%{$q}%")
+            ->orWhere('name_en', 'like', "%{$q}%")
+            ->limit(20)
+            ->get();
 
-        return view('public.search', compact('q', 'places', 'tags'));
+        return view('public.search', [
+            'q' => $q,
+            'places' => $places,
+            'tags' => $tags,
+            'alert' => null,
+        ]);
     }
 
     public function near(Request $request): View
