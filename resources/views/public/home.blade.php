@@ -3,7 +3,6 @@
     description="訪れた城・文化財を写真とメモで紹介する記録サイト。日本100名城・続100名城・その他の城・文化財を掲載。">
 
     <div class="space-y-10">
-
         <section class="rounded-2xl border border-slate-900/10 bg-white/60 shadow-sm overflow-hidden">
             <div class="p-6 md:p-8">
                 <div class="flex flex-wrap items-center gap-3">
@@ -23,13 +22,6 @@
                         <div class="text-sm font-medium">初めて訪れる人へ</div>
                         <div class="text-xs text-slate-600 mt-1">使い方・見方</div>
                     </a>
-
-                    {{-- ここは将来機能の枠 --}}
-                    <div class="p-4 rounded-xl border border-slate-900/10 bg-white/40 text-slate-500">
-                        <div class="text-sm font-medium">Coming Soon</div>
-                        <div class="text-xs mt-1">近くのスポット など</div>
-                    </div>
-
                     @foreach($categories as $category)
                         <a href="{{ route('public.categories.show', $category) }}"
                            class="p-4 rounded-xl border border-slate-900/10 bg-white/70 hover:bg-white shadow-sm">
@@ -37,6 +29,19 @@
                             <div class="text-xs text-slate-600 mt-1">カテゴリ</div>
                         </a>
                     @endforeach
+
+                    {{-- ここは将来機能の枠 --}}
+                    <div class="p-4 rounded-xl border border-slate-900/10 bg-white/40 text-slate-500">
+                        {{-- お城レーダー --}}
+                        <div class="text-sm font-medium">Coming Soon</div>
+                        <div class="text-xs mt-1">近くのスポット など</div>
+                    </div>
+
+                    <div class="p-4 rounded-xl border border-slate-900/10 bg-white/40 text-slate-500">
+                        {{-- お城クイズ(仮) --}}
+                        <div class="text-sm font-medium">Coming Soon</div>
+                        <div class="text-xs mt-1">???</div>
+                    </div>
                 </div>
 
                 {{-- 小さめの補助導線（検索を促す） --}}
@@ -108,7 +113,5 @@
                 </ul>
             </section>
         @endif
-
     </div>
-
 </x-public-layout>
