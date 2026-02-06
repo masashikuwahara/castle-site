@@ -102,7 +102,7 @@
     <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-slate-600 flex items-center justify-between">
         <span>© {{ date('Y') }} Daytripper</span>
     </div>
-    <!-- version.1.1.1 -->
+    <!-- version.1.2.0 -->
 </footer>
 </body>
 </html>

@@ -10,6 +10,7 @@ use App\Models\Prefecture;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class PlacePublicController extends Controller
 {
@@ -186,5 +187,45 @@ class PlacePublicController extends Controller
             'prefectures' => $prefectures,
             'prefectureId' => $prefectureId,
         ]);
+    }
+
+    public function prefectures()
+    {
+        $data = Cache::remember('public_prefecture_places_v1', 60 * 30, function () {
+            // 都道府県一覧（件数付き）
+            $prefectures = Prefecture::query()
+                ->select('id','slug','name_ja','name_en')
+                ->withCount(['places as places_count' => function ($q) {
+                    $q->where('is_published', 1);
+                }])
+                ->orderBy('id')
+                ->get();
+
+            // 都道府県ごとの城一覧（最低限の情報だけ）
+            $places = Place::query()
+                ->select('id','prefecture_id','slug','name_ja','name_en','short_desc_ja','short_desc_en','rating')
+                ->where('is_published', 1)
+                ->orderByDesc('rating')
+                ->orderBy('id')
+                ->get()
+                ->groupBy('prefecture_id');
+
+            return compact('prefectures','places');
+        });
+
+        return view('public.prefectures', $data);
+    }
+
+    public function prefecture(Prefecture $prefecture)
+    {
+        $places = Place::query()
+            ->select('id','slug','name_ja','name_en','short_desc_ja','short_desc_en','rating')
+            ->where('is_published', 1)
+            ->where('prefecture_id', $prefecture->id)
+            ->orderByDesc('rating')
+            ->orderBy('id')
+            ->paginate(24);
+
+        return view('public.prefectures.show', compact('prefecture','places'));
     }
 }
