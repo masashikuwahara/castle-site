@@ -69,5 +69,11 @@ Route::view('/about', 'public.about')->name('public.about');
 Route::get('/near', [\App\Http\Controllers\Public\PlacePublicController::class, 'near'])
     ->name('public.near');
 
+Route::get('/prefectures', [PlacePublicController::class, 'prefectures'])
+  ->name('public.prefectures');
+
+Route::get('/prefectures/{prefecture:slug}', [PlacePublicController::class, 'prefecture'])
+  ->name('public.prefectures.show');
+
 //サイトマップ作製
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('public.sitemap');
