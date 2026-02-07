@@ -29,7 +29,6 @@
   $defaultPrefId = $prefList->firstWhere('count', '>', 0)['id'] ?? ($prefList->first()['id'] ?? null);
 @endphp
 
-{{-- もしレイアウトが x-public-layout ならそれに合わせてください --}}
 <x-public-layout>
   <div
     x-data="prefExplorer({
@@ -46,7 +45,7 @@
       </h1>
       <p class="mt-2 text-sm text-slate-600">
         {{ $isJa
-          ? 'PCでは左の都道府県をクリックすると右側に城一覧が表示されます。スマホでは都道府県をタップして展開します。'
+          ? 'PC版では左の都道府県をクリックすると右側に城一覧が表示されます。モバイル版では都道府県をタップして展開します。'
           : 'On desktop, click a prefecture to see the list. On mobile, tap a prefecture to expand.' }}
       </p>
     </div>
@@ -60,12 +59,12 @@
             <div class="text-sm font-medium text-slate-800">
               {{ $isJa ? '都道府県を選択' : 'Select a prefecture' }}
             </div>
-            <a
+            {{-- <a
               class="text-xs text-slate-600 hover:text-slate-900 underline"
               :href="selectedPref ? prefectureShowUrl(selectedPref.slug) : '#'"
             >
               {{ $isJa ? '都道府県ページへ' : 'Open prefecture page' }}
-            </a>
+            </a> --}}
           </div>
 
           {{-- ここを将来的にSVG日本地図に差し替え可能 --}}
@@ -145,13 +144,13 @@
               </template>
 
               <div class="pt-2">
-                <a
+                {{-- <a
                   class="inline-flex items-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm hover:bg-slate-50 transition"
                   :href="selectedPref ? prefectureShowUrl(selectedPref.slug) : '#'"
                 >
                   {{ $isJa ? 'この都道府県の一覧ページへ' : 'Open prefecture page' }}
                   <span class="ml-2">→</span>
-                </a>
+                </a> --}}
               </div>
             </div>
           </div>
@@ -201,13 +200,12 @@
                     <div class="mt-1 text-sm text-slate-600 line-clamp-2" x-text="pl.desc"></div>
                   </a>
                 </template>
-
-                <a
+                {{-- <a
                   class="mt-2 inline-flex items-center text-sm underline text-slate-700 hover:text-slate-900"
                   :href="prefectureShowUrl(p.slug)"
                 >
                   {{ $isJa ? 'この都道府県の一覧ページへ' : 'Open prefecture page' }} →
-                </a>
+                </a> --}}
               </div>
             </div>
           </div>
