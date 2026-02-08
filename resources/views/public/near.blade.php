@@ -1,8 +1,8 @@
-<x-public-layout title="近くのスポット｜城・文化財" description="現在地から近い城・文化財を距離順に表示します。">
+<x-public-layout title="お城レーダー｜城・文化財" description="現在地から近い城・文化財を距離順に表示します。">
     <div class="space-y-4">
 
         <div class="flex items-end justify-between">
-            <h1 class="text-xl font-bold">近くのスポット</h1>
+            <h1 class="text-xl font-bold">お城レーダー</h1>
 
             <form method="GET" action="{{ route('public.near') }}" class="flex items-center gap-2">
                 <input type="hidden" name="lat" value="{{ $lat }}">
@@ -22,7 +22,7 @@
         {{-- 位置情報取得 --}}
         <div class="bg-white rounded shadow p-4 space-y-2">
             <div class="text-sm text-gray-700">
-                位置情報を許可すると、近い順に表示します。
+                現在地から近くの城を検索、近い順に表示します。
             </div>
 
             <div class="flex flex-wrap gap-2 items-center">

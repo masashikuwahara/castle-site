@@ -91,11 +91,11 @@
               </template>
             </div>
 
-            <div class="mt-4 text-xs text-slate-500">
+            {{-- <div class="mt-4 text-xs text-slate-500">
               {{ $isJa
                 ? '※最短実装としてボタン型の簡易地図です。後でSVG地図に差し替えできます。'
                 : '* This is a minimal clickable list. You can replace it with an SVG map later.' }}
-            </div>
+            </div> --}}
           </div>
         </div>
       </div>
