@@ -19,7 +19,6 @@
 /storage/*.key
 /storage/pail
 /vendor
-/resources/views/public
 /resources/views/components
 /app/Http/Controllers/Public
 Homestead.json
