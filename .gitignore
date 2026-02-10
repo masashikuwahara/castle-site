@@ -20,7 +20,6 @@
 /storage/pail
 /vendor
 /resources/views/components
-/app/Http/Controllers/Public
 Homestead.json
 Homestead.yaml
 Thumbs.db
