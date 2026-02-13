@@ -49,7 +49,6 @@ class PlaceController extends Controller
                 'thumbnail_taken_at',
             ]);
 
-            // ★追加：この6項目を取得して $data にマージ
             $extra = $request->validate([
                 'opening_hours_ja' => ['nullable', 'string'],
                 'opening_hours_en' => ['nullable', 'string'],

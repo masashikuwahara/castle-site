@@ -23,6 +23,11 @@
         <div class="bg-white rounded shadow p-4 space-y-2">
             <div class="text-sm text-gray-700">
                 現在地から近くの城を検索、近い順に表示します。
+                使い方は「現在地から探す」ボタンを押すだけ。<br>
+                許可すれば現在地の近くにある城を近い順にリストで表示します。
+                また右上の半径から検索する範囲を調整できます。<br>
+                もしGPSが使えない場合は「位置情報が使えない場合はコチラ」で
+                現在の都道府県を選択してください。
             </div>
 
             <div class="flex flex-wrap gap-2 items-center">

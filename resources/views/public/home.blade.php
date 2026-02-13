@@ -31,14 +31,14 @@
                     @endforeach
 
                     {{-- ここは将来機能の枠 --}}
-                    <div class="p-4 rounded-xl border border-slate-900/10 bg-white/40 text-slate-500">
-                        {{-- お城レーダー --}}
-                        <div class="text-sm font-medium">Coming Soon</div>
-                        <div class="text-xs mt-1">近くのスポット など</div>
-                    </div>
+                    <a href="{{ route('public.near') }}"
+                       class="p-4 rounded-xl border border-slate-900/10 bg-white/70 hover:bg-white shadow-sm">
+                        <div class="text-sm font-medium">お城レーダー</div>
+                        <div class="text-xs text-slate-600 mt-1">近くの城が検索できます</div>
+                    </a>
 
                     <div class="p-4 rounded-xl border border-slate-900/10 bg-white/40 text-slate-500">
-                        {{-- お城クイズ(仮) --}}
+                        {{-- 都道府県別検索 --}}
                         <div class="text-sm font-medium">Coming Soon</div>
                         <div class="text-xs mt-1">???</div>
                     </div>
