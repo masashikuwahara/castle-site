@@ -50,8 +50,8 @@ class PlaceUpdateRequest extends FormRequest
 
             'castle_style_ja' => ['nullable', 'string', 'max:80'],
             'castle_style_en' => ['nullable', 'string', 'max:120'],
-            'tenshu_style_ja' => ['nullable', 'string', 'max:80'],
-            'tenshu_style_en' => ['nullable', 'string', 'max:120'],
+            'tenshu_style_ja' => ['nullable', 'string', 'max:256'],
+            'tenshu_style_en' => ['nullable', 'string', 'max:512'],
 
             'heritage_designation_ja' => ['nullable', 'string', 'max:120'],
             'heritage_designation_en' => ['nullable', 'string', 'max:160'],
