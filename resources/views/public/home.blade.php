@@ -85,8 +85,8 @@
                         <div class="text-xs text-slate-600 mt-1">サイトの使い方・見方</div>
                     </a>
 
-                    @if(\Illuminate\Support\Facades\Route::has('public.prefectures.index'))
-                        <a href="{{ route('public.prefectures.index') }}"
+                    @if(\Illuminate\Support\Facades\Route::has('public.prefectures'))
+                        <a href="{{ route('public.prefectures') }}"
                            class="p-4 rounded-xl border border-slate-900/10 bg-white/70 hover:bg-white shadow-sm transition">
                             <div class="text-sm font-medium">都道府県から探す</div>
                             <div class="text-xs text-slate-600 mt-1">地域別に城・城跡を一覧表示</div>
