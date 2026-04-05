@@ -50,31 +50,23 @@
       </p>
     </div>
 
-    {{-- PC: 2カラム（左=地図/選択、右=城リスト） --}}
-    <div class="hidden lg:grid grid-cols-12 gap-6">
-      {{-- 左：地図（最短=クリック可能な都道府県ボタン一覧） --}}
+    {{-- PC: 2カラム（左=都道府県選択、右=城リスト） --}}
+    <div class="hidden lg:grid grid-cols-12 gap-6 items-start">
+      {{-- 左：都道府県一覧 --}}
       <div class="col-span-5">
         <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div class="px-4 py-3 border-b border-slate-200 flex items-center justify-between">
             <div class="text-sm font-medium text-slate-800">
               {{ $isJa ? '都道府県を選択' : 'Select a prefecture' }}
             </div>
-            {{-- <a
-              class="text-xs text-slate-600 hover:text-slate-900 underline"
-              :href="selectedPref ? prefectureShowUrl(selectedPref.slug) : '#'"
-            >
-              {{ $isJa ? '都道府県ページへ' : 'Open prefecture page' }}
-            </a> --}}
           </div>
 
-          {{-- ここを将来的にSVG日本地図に差し替え可能 --}}
           <div class="p-4">
             <div class="grid grid-cols-2 gap-2">
               <template x-for="p in prefectures" :key="p.id">
                 <button
                   type="button"
-                  class="text-left rounded-xl border px-3 py-2 transition
-                         hover:bg-slate-50"
+                  class="text-left rounded-xl border px-3 py-2 transition hover:bg-slate-50"
                   :class="selectedPrefId === p.id
                     ? 'border-slate-900 bg-slate-50'
                     : 'border-slate-200 bg-white'"
@@ -90,18 +82,12 @@
                 </button>
               </template>
             </div>
-
-            {{-- <div class="mt-4 text-xs text-slate-500">
-              {{ $isJa
-                ? '※最短実装としてボタン型の簡易地図です。後でSVG地図に差し替えできます。'
-                : '* This is a minimal clickable list. You can replace it with an SVG map later.' }}
-            </div> --}}
           </div>
         </div>
       </div>
 
       {{-- 右：城リスト --}}
-      <div class="col-span-7">
+      <div class="col-span-7 self-start sticky top-24">
         <div class="rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div class="px-4 py-3 border-b border-slate-200 flex items-center justify-between">
             <div>
@@ -116,7 +102,10 @@
             </div>
           </div>
 
-          <div class="p-4">
+          <div
+            x-ref="placesPane"
+            class="p-4 max-h-[calc(100vh-8rem)] overflow-y-auto"
+          >
             <template x-if="(currentPlaces?.length ?? 0) === 0">
               <div class="text-sm text-slate-600">
                 {{ $isJa ? '公開中の城データがまだありません。' : 'No published places yet.' }}
@@ -142,16 +131,6 @@
                   </div>
                 </a>
               </template>
-
-              <div class="pt-2">
-                {{-- <a
-                  class="inline-flex items-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm hover:bg-slate-50 transition"
-                  :href="selectedPref ? prefectureShowUrl(selectedPref.slug) : '#'"
-                >
-                  {{ $isJa ? 'この都道府県の一覧ページへ' : 'Open prefecture page' }}
-                  <span class="ml-2">→</span>
-                </a> --}}
-              </div>
             </div>
           </div>
         </div>
@@ -176,8 +155,17 @@
             </div>
 
             <div class="text-slate-600">
-              <svg class="w-5 h-5 transition" :class="openPrefId === p.id ? 'rotate-180' : ''" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd"/>
+              <svg
+                class="w-5 h-5 transition"
+                :class="openPrefId === p.id ? 'rotate-180' : ''"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"
+                  clip-rule="evenodd"
+                />
               </svg>
             </div>
           </button>
@@ -200,12 +188,6 @@
                     <div class="mt-1 text-sm text-slate-600 line-clamp-2" x-text="pl.desc"></div>
                   </a>
                 </template>
-                {{-- <a
-                  class="mt-2 inline-flex items-center text-sm underline text-slate-700 hover:text-slate-900"
-                  :href="prefectureShowUrl(p.slug)"
-                >
-                  {{ $isJa ? 'この都道府県の一覧ページへ' : 'Open prefecture page' }} →
-                </a> --}}
               </div>
             </div>
           </div>
@@ -213,7 +195,6 @@
       </template>
     </div>
 
-    {{-- Alpineロジック --}}
     <script>
       function prefExplorer({ prefectures, placesByPref, defaultPrefId, isJa }) {
         return {
@@ -224,7 +205,6 @@
           openPrefId: null,
 
           init() {
-            // mobile: 最初に開く（城がある県があればそこ）
             this.openPrefId = this.selectedPrefId;
           },
 
@@ -238,14 +218,19 @@
 
           selectPref(id) {
             this.selectedPrefId = id;
+
+            this.$nextTick(() => {
+              if (this.$refs.placesPane) {
+                this.$refs.placesPane.scrollTop = 0;
+              }
+            });
           },
 
           toggleAccordion(id) {
-            this.openPrefId = (this.openPrefId === id) ? null : id;
+            this.openPrefId = this.openPrefId === id ? null : id;
           },
 
           prefectureShowUrl(slug) {
-            // ルート名 public.prefectures.show を使っている前提で、URLは /prefectures/{slug}
             return `/prefectures/${slug}`;
           },
         };
