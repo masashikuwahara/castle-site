@@ -15,14 +15,12 @@
                 @endif
             </div>
 
-            <div class="p-4 space-y-2">
-                {{-- タイトル（明朝寄せ） --}}
+            <div class="p-4 space-y-2 flex flex-col">
                 <div class="text-sm leading-snug line-clamp-2 tracking-wide"
                      style="font-family:'Noto Serif JP', serif;">
                     {{ $place->name_ja }}
                 </div>
 
-                {{-- 都道府県 / カテゴリ（札のメタ情報） --}}
                 <div class="text-xs text-slate-600 flex flex-wrap gap-2">
                     @if($place->prefecture?->name_ja)
                         <span class="inline-flex items-center px-2 py-0.5 rounded-full border border-slate-900/10 bg-[#fbfaf7]">
@@ -36,7 +34,6 @@
                     @endif
                 </div>
 
-                {{-- おすすめ（朱のスタンプ感） --}}
                 @if(!empty($place->rating))
                     <div class="text-xs inline-flex items-center gap-2">
                         <span class="inline-flex items-center px-2 py-0.5 rounded-md border border-[#c2412d]/25 bg-[#fbfaf7] text-[#a83626] text-xs shadow-sm">
@@ -48,14 +45,12 @@
                     </div>
                 @endif
 
-                {{-- 概要 --}}
                 @if(!empty($place->short_desc_ja))
                     <div class="text-[11px] text-slate-600/90 line-clamp-2 leading-relaxed">
                         {{ $place->short_desc_ja }}
                     </div>
                 @endif
 
-                {{-- タグ（藍/苔の薄色チップ） --}}
                 @if($place->tags?->isNotEmpty())
                     <div class="flex flex-wrap gap-1.5 pt-1">
                         @foreach($place->tags->take(3) as $tag)
@@ -66,6 +61,9 @@
                         @endforeach
                     </div>
                 @endif
+                <div class="mt-auto pt-3 text-[11px] text-slate-600/90 leading-relaxed">
+                    更新日: {{ $place->updated_at?->format('Y年n月j日') }}
+                </div>
             </div>
         </a>
     @endforeach
