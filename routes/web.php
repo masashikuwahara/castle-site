@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\PlaceController;
 use App\Http\Controllers\Public\PlacePublicController;
 use App\Http\Controllers\Public\SitemapController;
 use App\Http\Controllers\Admin\PlacePhotoController;
+use App\Http\Controllers\PublicSearchSuggestController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -70,10 +71,13 @@ Route::get('/near', [\App\Http\Controllers\Public\PlacePublicController::class, 
     ->name('public.near');
 
 Route::get('/prefectures', [PlacePublicController::class, 'prefectures'])
-  ->name('public.prefectures');
+    ->name('public.prefectures');
 
 Route::get('/prefectures/{prefecture:slug}', [PlacePublicController::class, 'prefecture'])
-  ->name('public.prefectures.show');
+    ->name('public.prefectures.show');
+
+Route::get('/suggest', PublicSearchSuggestController::class)
+    ->name('public.suggest');
 
 //サイトマップ作製
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('public.sitemap');
